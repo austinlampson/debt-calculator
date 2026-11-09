@@ -138,7 +138,7 @@ details summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:14px
 .report-row{display:flex;gap:8px;flex-wrap:wrap}.report-row .in{flex:1 1 200px}
 .report-msg{font-size:13px;color:var(--muted);margin:0}
 .linkbtn{background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;justify-self:start;padding:4px 0;font:inherit;font-weight:700}
-.cta-shot{display:flex;justify-content:center}.cta-shot .shot{width:160px;aspect-ratio:4/5}
+.cta-shot{display:flex;justify-content:center}.cta-shot .shot{width:72px;height:72px;aspect-ratio:1;border-radius:50%;padding:4px}.cta-shot .shot div{font-size:9px}.cta-shot .shot b{font-size:9px}
 
 .shot{margin:0;border:2px dashed color-mix(in srgb,currentColor 40%,transparent);border-radius:10px;display:grid;place-items:center;text-align:center;padding:8px;max-width:100%;color:var(--muted)}
 .shot div{display:grid;gap:2px;font-size:11.5px;line-height:1.3}.shot b{font-size:12px;letter-spacing:.06em;text-transform:uppercase}.shot span{opacity:.8}
@@ -187,7 +187,7 @@ body.sheet-open{overflow:hidden}
 .shot.has-img{border:0;padding:0;overflow:hidden;position:relative;flex:none}
 .shot.has-img div{display:none}
 .shot img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 25%;display:block;border-radius:inherit}
-.say .shot{height:72px}
+.say .shot,.cta-shot .shot{height:72px}
 </style>
 </head>
 <body>
@@ -295,7 +295,7 @@ const CONFIG = {
   // Photos: upload files with these exact names. Any missing file shows a labeled placeholder.
   photos: {
     headshot: "headshot.jpg",
-    poses: ["headshot.jpg", "pose-point-form.jpg", "pose-point-down.jpg", "pose-point-number.jpg", "pose-thumbs-up.jpg"]
+    poses: ["headshot.jpg", "headshot.jpg", "headshot.jpg", "headshot.jpg", "headshot.jpg"]
   }
 };
 
@@ -775,10 +775,10 @@ chips("propType",PROP_OPTS); chips("occupancy",OCC_OPTS);
 $("credit").innerHTML=optList(CREDIT_OPTS,SAMPLE.credit);
 $("name").value=SAMPLE.name; $("value").value=SAMPLE.value.toLocaleString();
 $("baseRate").value=CONFIG.base30; $("closingPct").value=CONFIG.closingPct; $("bond").value=CONFIG.bond10;
-const poses=["Headshot","Pointing at the form","Pointing down at list","Pointing at the big number","Thumbs up"];
+const poses=["Headshot","Headshot","Headshot","Headshot","Headshot"];
 const poseFiles=CONFIG.photos.poses;
 document.querySelectorAll(".screen").forEach(s=>s.querySelector(".ps").innerHTML=shot(poses[+s.dataset.s],"",poseFiles[+s.dataset.s]));
-$("ctaShot").innerHTML=shot("Headshot, inviting","",CONFIG.photos.headshot);
+$("ctaShot").innerHTML=shot("Headshot","",CONFIG.photos.headshot);
 $("foot").innerHTML=footerHTML();
 initDebts($("debts"),SAMPLE.debts,render);
 $("addDebt").onclick=()=>addDebt($("debts"),render);
