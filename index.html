@@ -294,7 +294,7 @@ const CONFIG = {
   // Photos: upload files with these exact names. Any missing file shows a labeled placeholder.
   photos: {
     headshot: "headshot.jpg",
-    poses: ["pose-wave.jpg", "pose-point-form.jpg", "pose-point-down.jpg", "pose-point-number.jpg", "pose-thumbs-up.jpg"]
+    poses: ["headshot.jpg", "pose-point-form.jpg", "pose-point-down.jpg", "pose-point-number.jpg", "pose-thumbs-up.jpg"]
   }
 };
 
@@ -774,7 +774,7 @@ chips("propType",PROP_OPTS); chips("occupancy",OCC_OPTS);
 $("credit").innerHTML=optList(CREDIT_OPTS,SAMPLE.credit);
 $("name").value=SAMPLE.name; $("value").value=SAMPLE.value.toLocaleString();
 $("baseRate").value=CONFIG.base30; $("closingPct").value=CONFIG.closingPct; $("bond").value=CONFIG.bond10;
-const poses=["Waving hello","Pointing at the form","Pointing down at list","Pointing at the big number","Thumbs up"];
+const poses=["Headshot","Pointing at the form","Pointing down at list","Pointing at the big number","Thumbs up"];
 const poseFiles=CONFIG.photos.poses;
 document.querySelectorAll(".screen").forEach(s=>s.querySelector(".ps").innerHTML=shot(poses[+s.dataset.s],"",poseFiles[+s.dataset.s]));
 $("ctaShot").innerHTML=shot("Headshot, inviting","",CONFIG.photos.headshot);
