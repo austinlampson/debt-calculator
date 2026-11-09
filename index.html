@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="See what your debt really costs you and whether a Debt Restructure could make sense. Austin Lampson, NMLS #517060.">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Debt Management Calculator | The Lampson Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a guided conversation, one step per screen with a progress track; Austin "talks" each step; results build toward a gated strategy reveal. */
+:root{
+  --bg:#FBFAF7; --surface:#FFFFFF; --ink:#16243A; --muted:#5E6A7A; --line:#E3E1DA;
+  --navy:#16243A; --gold:#D7A6E6; --gold-soft:#F5EAF9; --gold-ink:#7E4F91; --accent:#D7A6E6; --accent-soft:#F5EAF9; --good:#2F7A4E; --warn:#9A620F;
+  --note:#FFF4C9; --note-ink:#5A4500;
+  --bar-old:#A84343; --bar-mid:#A3A9B2; --bar-alt:#E4C6EE; --bar-best:#16243A;
+  --display:"Young Serif",Georgia,serif; --body:"Figtree",system-ui,-apple-system,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101722; --surface:#18222F; --ink:#ECEFF2; --muted:#A0AAB6; --line:#2A3544;
+  --navy:#0B1119; --gold:#D7A6E6; --gold-soft:#3A2B42; --gold-ink:#D7A6E6; --accent:#D7A6E6; --accent-soft:#3A2B42; --good:#6FC48F; --warn:#E5AA52;
+  --note:#3B3417; --note-ink:#F1DE9A;
+  --bar-old:#E07A7A; --bar-mid:#5F6A78; --bar-alt:#7B5A87; --bar-best:#D7A6E6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101722; --surface:#18222F; --ink:#ECEFF2; --muted:#A0AAB6; --line:#2A3544;
+  --navy:#0B1119; --gold:#D7A6E6; --gold-soft:#3A2B42; --gold-ink:#D7A6E6; --accent:#D7A6E6; --accent-soft:#3A2B42; --good:#6FC48F; --warn:#E5AA52;
+  --note:#3B3417; --note-ink:#F1DE9A;
+  --bar-old:#E07A7A; --bar-mid:#5F6A78; --bar-alt:#7B5A87; --bar-best:#D7A6E6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.15}
+.review{background:var(--note);color:var(--note-ink);font-size:12.5px;border-radius:6px;padding:8px 11px;margin:0}
+.review b{letter-spacing:.08em;font-size:10.5px;margin-right:6px}
+
+.top{background:var(--navy);color:#F3F1EA}
+.top .wrap{padding-block:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.team{font-family:var(--display);font-size:17px}.team small{font-family:var(--body);font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-left:8px}
+.ccm{font-weight:800;letter-spacing:.06em;font-size:14px;border:1px solid rgba(243,241,234,.35);padding:3px 9px;border-radius:3px}.ccm sup{font-size:.6em}
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.progress .wrap{padding-block:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pstep{display:grid;gap:5px;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em;background:none;border:0;padding:0;text-align:left;cursor:pointer;font-family:inherit}
+.pstep::before{content:"";height:4px;border-radius:4px;background:var(--line)}
+.pstep.done::before,.pstep.on::before{background:var(--gold)}
+.pstep.on{color:var(--ink)}
+.pstep:disabled{cursor:default}
+@media (max-width:480px){.pstep span{display:none}}
+
+main .wrap{padding-block:22px 40px;display:grid;gap:18px}
+.screen{display:grid;gap:18px}
+.screen[hidden]{display:none!important}
+.say{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:start}
+.say .shot{width:72px;aspect-ratio:1;border-radius:50%;padding:4px}
+.say .shot div{font-size:9px}.say .shot b{font-size:9px}
+.bubble{background:var(--surface);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:14px 16px}
+.bubble h2{font-size:clamp(24px,4.6vw,32px)}
+.bubble p{margin:6px 0 0;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--muted);min-width:0}
+.in{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:8px;background:var(--bg)}
+.in:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.in i{font-style:normal;padding:0 10px;color:var(--muted);font-family:var(--mono);font-size:14px}
+input,select{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;padding:11px 12px;width:100%;min-width:0;outline:none}
+.f>select,.f>input{border:1.5px solid var(--line);border-radius:8px;background:var(--bg)}
+.bigname{font-family:var(--display);font-size:28px!important;padding:14px!important}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:30px;padding:9px 15px;font:inherit;font-weight:600;cursor:pointer;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+#debts{display:grid;gap:12px}
+.debt{border:1.5px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;background:var(--bg)}
+.debt .in,.debt .f>select,.debt .f>input{background:var(--surface)}
+.debt-top{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:end}
+.debt-grid,.debt-start{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.debt-opts{display:flex;flex-wrap:wrap;gap:6px 18px}
+.chk{display:flex;gap:7px;align-items:center;font-size:13.5px;color:var(--muted)}
+.chk input{width:auto;accent-color:var(--gold)}
+.debt-note{margin:0;font-size:12.5px;color:var(--muted)}
+@media (max-width:420px){.debt-top{grid-template-columns:1fr}}
+
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:700;border-radius:30px;padding:12px 22px;cursor:pointer;border:1.5px solid var(--ink);text-decoration:none;color:var(--ink);background:transparent;min-height:46px}
+.btn-primary{background:var(--ink);color:var(--bg)}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#16243A}
+.btn-ghost{background:transparent}
+.btn:focus-visible,a:focus-visible,.chip:focus-visible,.pstep:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.hero-num{display:grid;gap:4px;text-align:center;padding:18px;border-radius:12px;background:var(--navy);color:#F3F1EA}
+.hero-num small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;font-weight:700}
+.hero-num b{font-family:var(--display);font-weight:400;font-size:clamp(44px,10vw,68px);line-height:1}
+.hero-num span{opacity:.8;font-size:14px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:2px}
+.mini small{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mini b{font-family:var(--mono);font-weight:500;font-size:20px;font-variant-numeric:tabular-nums}
+.src{font-size:13px;color:var(--muted);margin:0}.src b{color:var(--warn)}
+.notes{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px;color:var(--muted)}
+.ratebox{display:flex;flex-wrap:wrap;gap:12px}.ratebox .f{width:150px}
+details summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:14px}
+
+.gate{display:grid;gap:12px;border:2px solid var(--gold);border-radius:12px;padding:18px;background:var(--gold-soft)}
+.gate h3{font-size:24px}
+.gate p{margin:0}
+.gate-msg{font-size:13.5px;color:var(--muted);margin:0}
+.strats{display:grid;gap:12px}
+.strat{border:1.5px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;background:var(--surface)}
+.strat.is-best{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.strat-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.strat-n{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-ink)}
+.pill{font-size:11.5px;font-weight:800;color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent);border-radius:20px;padding:3px 10px}
+.strat h3{font-size:24px}
+.strat-d{margin:0;color:var(--muted);font-size:14px}
+.kv{margin:0;display:grid;gap:6px}
+.kv div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:5px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.chart-wrap{overflow-x:auto}.chart{width:100%;min-width:520px;height:auto;display:block}
+.ch-l{font:600 12.5px var(--body);fill:var(--muted)}.ch-v{font:500 12.5px var(--mono);fill:var(--ink)}
+
+.cta{display:grid;gap:12px;text-align:center}
+.cta h2{font-size:clamp(26px,5vw,34px)}
+.cta p{margin:0;color:var(--muted)}
+.cta-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cta-btns .btn{border-radius:12px;min-height:56px;font-size:17px}
+.btn-text{background:var(--gold);border-color:var(--gold);color:#16243A}
+.btn-email,.btn-call{background:var(--ink);color:var(--bg)}
+.cta-lines{display:grid;gap:6px;text-align:left}
+.cta-lines div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;flex-wrap:wrap}
+.cta-lines span{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.cta-lines b{font-family:var(--mono);font-weight:500;user-select:all}
+.report{display:grid;gap:6px;text-align:left;border-top:1px solid var(--line);padding-top:12px}
+.report-row{display:flex;gap:8px;flex-wrap:wrap}.report-row .in{flex:1 1 200px}
+.report-msg{font-size:13px;color:var(--muted);margin:0}
+.linkbtn{background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;justify-self:start;padding:4px 0;font:inherit;font-weight:700}
+.cta-shot{display:flex;justify-content:center}.cta-shot .shot{width:160px;aspect-ratio:4/5}
+
+.shot{margin:0;border:2px dashed color-mix(in srgb,currentColor 40%,transparent);border-radius:10px;display:grid;place-items:center;text-align:center;padding:8px;max-width:100%;color:var(--muted)}
+.shot div{display:grid;gap:2px;font-size:11.5px;line-height:1.3}.shot b{font-size:12px;letter-spacing:.06em;text-transform:uppercase}.shot span{opacity:.8}
+.foot{border-top:1px solid var(--line)}
+.foot .wrap{padding-block:20px 30px;display:grid;gap:8px;font-size:11.5px;color:var(--muted)}
+.foot p{margin:0}.foot a{color:var(--ink)}
+
+.ym{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.debt-foot{display:flex;justify-content:space-between;align-items:center;gap:8px 14px;flex-wrap:wrap}
+.rm{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-left:auto;height:auto}
+.rm:hover{color:var(--bar-old)}
+.wealth{display:grid;gap:2px;border-radius:6px;padding:10px 12px;background:var(--accent-soft)}
+.wealth small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.wealth b{font-family:var(--mono);font-weight:500;font-size:26px;font-variant-numeric:tabular-nums}
+.kv .kv-line{border-top:1px solid var(--line);padding-top:6px}
+.kv dd.up{color:var(--good)} .kv dd.down{color:var(--bar-old)}
+.sooner{margin:0;font-weight:700;font-size:13.5px;color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent);border-radius:6px;padding:8px 10px}
+.two-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.chart-col{display:grid;gap:4px;align-content:start;min-width:0}
+.chart-col h4{margin:0;font-family:var(--display);font-weight:400;font-size:18px}
+.chart{min-width:380px!important}
+.two-charts{grid-template-columns:1fr!important;gap:22px}
+.logo{display:flex;align-items:center;min-height:40px}
+.logo img{height:40px;width:auto;max-width:220px;display:block}
+.logo-ph[hidden]{display:none}
+.logo-ph{display:grid;place-items:center;height:40px;width:180px;max-width:100%;border:2px dashed rgba(243,241,234,.45);border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.1em;color:rgba(243,241,234,.8)}
+.tagline{font-family:var(--body);font-style:normal;font-weight:400;font-size:16px;color:#F3F1EA;opacity:.92}
+@media (max-width:420px){.tagline{font-size:15px}}
+.shot.has-img{border:0;padding:0;overflow:hidden}
+.shot.has-img div{display:none}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+</style>
+</head>
+<body>
+
+
+<div class="top"><div class="wrap"><div class="logo"><img src="logo.png" alt="CrossCountry Mortgage" onerror="this.style.display='none';this.nextElementSibling.hidden=false"><span class="logo-ph" hidden>LOGO · logo.png</span></div><div class="tagline">Your Ally In The Process</div></div></div>
+<nav class="progress" aria-label="Steps"><div class="wrap" id="prog"></div></nav>
+
+<main><div class="wrap">
+
+  <section class="screen" data-s="0">
+    <div class="say"><div class="ps"></div><div class="bubble"><h2>Let's see what your debt really costs you.</h2><p>Two minutes, no credit pull. I'm Austin. What should I call you?</p></div></div>
+    <div class="card">
+      <label class="f" for="name"><span>First name</span><input id="name" class="bigname" autocomplete="given-name" placeholder="First name"></label>
+    </div>
+    <div class="nav"><span></span><button class="btn btn-primary" data-go="1">Let's start</button></div>
+  </section>
+
+  <section class="screen" data-s="1" hidden>
+    <div class="say"><div class="ps"></div><div class="bubble"><h2 class="hi-name">Tell me about your home.</h2><p>This tells us how much equity you have to work with.</p></div></div>
+    <div class="card">
+      <label class="f" for="value"><span>Estimated home value</span><div class="in"><i>$</i><input id="value" inputmode="decimal"></div></label>
+      <div class="f"><span>Property type</span><div class="chips" data-for="propType"></div></div>
+      <div class="f"><span>How do you use it?</span><div class="chips" data-for="occupancy"></div></div>
+      <label class="f" for="credit"><span>Credit score (your best guess)</span><select id="credit"></select></label>
+      <input type="hidden" id="propType"><input type="hidden" id="occupancy">
+    </div>
+    <div class="nav"><button class="btn btn-ghost" data-go="0">Back</button><button class="btn btn-primary" data-go="2">Next: your debts</button></div>
+  </section>
+
+  <section class="screen" data-s="2" hidden>
+    <div class="say"><div class="ps"></div><div class="bubble"><h2>Now list what you owe.</h2><p>Mortgage, credit cards, car, anything with a monthly payment. Mark cards as revolving.</p></div></div>
+    <div id="debts"></div>
+    <div><button type="button" class="btn btn-ghost" id="addDebt">+ Add another debt</button></div>
+    <div class="nav"><button class="btn btn-ghost" data-go="1">Back</button><button class="btn btn-primary" data-go="3">See my numbers</button></div>
+  </section>
+
+  <section class="screen" data-s="3" hidden>
+    <div class="say"><div class="ps"></div><div class="bubble"><h2 id="resTitle">Here's what I found.</h2><p id="resSub"></p></div></div>
+    <div class="pair" id="nowPair"></div>
+    <div class="hero-num" id="heroNum"></div>
+    <div class="card">
+      <div class="pair" id="newPair"></div>
+      <p class="src" id="src"></p>
+      <div id="notes"></div>
+      <details><summary>Adjust rate and costs</summary>
+        <div class="ratebox" style="margin-top:10px">
+          <label class="f" for="baseRate"><span>Freddie Mac 30-yr</span><div class="in"><input id="baseRate" inputmode="decimal"><i>%</i></div></label>
+          <label class="f" for="closingPct"><span>Est. costs</span><div class="in"><input id="closingPct" inputmode="decimal"><i>%</i></div></label>
+          <label class="f" for="bond"><span>Savings yield</span><div class="in"><input id="bond" inputmode="decimal"><i>%</i></div></label>
+        </div>
+      </details>
+    </div>
+    <div class="gate" id="gate">
+      <h3>Unlock the 2nd level strategy</h3>
+      <p id="gateCopy"></p>
+      <div class="grid">
+        <label class="f" for="leadPhone"><span>Mobile</span><div class="in"><input id="leadPhone" type="tel" autocomplete="tel" placeholder="805-555-0100"></div></label>
+        <label class="f" for="leadEmail"><span>Email</span><div class="in"><input id="leadEmail" type="email" autocomplete="email" placeholder="you@email.com"></div></label>
+      </div>
+      <button class="btn btn-gold" id="unlock" type="button">Unlock my strategy</button>
+      <p class="gate-msg" id="gateMsg">Phone or email is fine. We'll send your results and never share your info.</p>
+    </div>
+    <div class="nav"><button class="btn btn-ghost" data-go="2">Back</button><span></span></div>
+  </section>
+
+  <section class="screen" data-s="4" hidden>
+    <div class="say"><div class="ps"></div><div class="bubble"><h2 id="stTitle">Now let's put that difference to work.</h2><p>Same Debt Restructure. Three ways to use the monthly difference over the next 10 years.</p></div></div>
+    <div class="strats" id="strats"></div>
+    <div class="card"><h3 style="font-size:22px">Where you stand in 10 years</h3><div id="chart"></div></div>
+    <div class="card"><h3 style="font-size:22px">Restructure costs vs. what you keep</h3><div id="cost"></div></div>
+    <div class="card"><div class="cta-shot" id="ctaShot"></div><div id="cta"></div></div>
+    <div class="nav"><button class="btn btn-ghost" data-go="3">Back</button><span></span></div>
+  </section>
+</div></main>
+<div id="foot"></div>
+<form name="debt-calculator-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field"><input name="name"><input name="phone"><input name="email"><input name="home"><input name="savings"><textarea name="summary"></textarea>
+</form>
+
+
+<script>
+/* ===== CONFIG: one place to edit branding, contact and rate settings ===== */
+const CONFIG = {
+  name: "Austin Lampson",
+  firstName: "Austin",
+  title: "SVP of Lending",
+  nmls: "517060",
+  team: "The Lampson Team at CrossCountry Mortgage",
+  division: "CCM²",
+  company: "CrossCountry Mortgage, LLC",
+  companyNmls: "3029",
+  address: "800 Miramonte Drive Ste. 270, Santa Barbara, CA 93109",
+  callLine: "8058697100",
+  textLine: "8054298661",
+  email: "austin@austinlampson.com",
+  tagline: "Your Ally In The Process",
+  // Rates. Live site: filled weekly from Freddie Mac PMMS (published Thursdays).
+  rateSource: "Freddie Mac PMMS 30-yr fixed average",
+  rateDate: "10/29/26",
+  base30: 7.24,                  // Freddie Mac PMMS 30-yr, week of 10/29/26
+  rateAdder: 0.25,               // your add-on to the index
+  bond10: 4.15,                  // SAMPLE 10-yr Treasury yield
+  closingPct: 2.0,               // est. restructure costs, % of balances, rolled into loan
+  // Photos: upload files with these exact names. Any missing file shows a labeled placeholder.
+  photos: {
+    headshot: "headshot.jpg",
+    poses: ["pose-wave.jpg", "pose-point-form.jpg", "pose-point-down.jpg", "pose-point-number.jpg", "pose-thumbs-up.jpg"]
+  }
+};
+
+const fmtPhone = d => `${d.slice(0,3)}-${d.slice(3,6)}-${d.slice(6)}`;
+const num = v => { const n = parseFloat(String(v ?? "").replace(/[^0-9.\-]/g, "")); return isFinite(n) ? n : 0; };
+const usd = (n, d = 0) => (n < 0 ? "-" : "") + "$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const pct = (n, d = 3) => (isFinite(n) ? n.toFixed(d).replace(/0+$/, "").replace(/\.$/, "") : "—") + "%";
+function ym(m) { m = Math.round(m); const y = Math.floor(m / 12), mo = m % 12; return (y ? y + (y === 1 ? " yr" : " yrs") : "") + (y && mo ? " " : "") + (mo ? mo + " mo" : "") || "0 mo"; }
+function pmt(P, r, n) { const i = r / 1200; return P <= 0 ? 0 : i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n)); }
+
+const DEBT_TYPES = { mortgage: "Mortgage", heloc: "HELOC / 2nd", auto: "Auto loan", card: "Credit card", student: "Student loan", personal: "Personal loan", other: "Other" };
+
+/* Max cash-out LTV, general conventional guidelines */
+function maxLtv(occ, prop) {
+  const multi = prop === "2-4 unit";
+  if (occ === "Primary") return multi ? 75 : 80;
+  if (occ === "Second home") return 75;
+  return multi ? 70 : 75;
+}
+
+/* months remaining for one debt */
+function monthsLeft(d) {
+  if (d.revolving) return null;
+  if (d.start && d.term) {
+    const [y, m] = d.start.split("-").map(Number);
+    const now = new Date();
+    const elapsed = (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - m);
+    return Math.max(0, d.term * 12 - elapsed);
+  }
+  return d.months || null;
+}
+
+function compute(inp) {
+  const debts = inp.debts.filter(d => d.bal > 0);
+  const totalBal = debts.reduce((s, d) => s + d.bal, 0);
+  const oldPay = debts.reduce((s, d) => s + d.pay, 0);
+  const blended = totalBal ? debts.reduce((s, d) => s + d.bal * d.rate, 0) / totalBal : 0;
+  const monthlyInt = debts.reduce((s, d) => s + d.bal * d.rate / 1200, 0);
+
+  // simulate current debts 120 months
+  const sim = debts.map(d => ({ ...d, b: d.bal, left: monthsLeft(d), paidOff: null, stuck: false }));
+  const oldPayByMonth = [];
+  let oldInt10 = 0, oldPaid10 = 0;
+  for (let m = 1; m <= 120; m++) {
+    let paySum = 0;
+    sim.forEach(s => {
+      if (s.b <= 0.005) return;
+      const it = s.b * s.rate / 1200;
+      let p = s.pay;
+      if (s.left != null && s.left > 0 && m === s.left) p = s.b + it; // final payment
+      if (p > s.b + it) p = s.b + it;
+      if (p <= it && m === 1) s.stuck = true;
+      oldInt10 += Math.min(it, p);
+      s.b = s.b + it - p;
+      paySum += p;
+      if (s.b <= 0.005 && s.paidOff == null) { s.b = 0; s.paidOff = m; }
+    });
+    oldPayByMonth.push(paySum);
+    oldPaid10 += paySum;
+  }
+  const oldBal10 = sim.reduce((s, d) => s + Math.max(d.b, 0), 0);
+  const payoffs = sim.filter(s => s.paidOff && s.paidOff <= 120).map(s => ({ label: s.label, month: s.paidOff }));
+  const stuck = sim.filter(s => s.stuck).map(s => s.label);
+
+  // new loan
+  const newRate = inp.baseRate + inp.adder;
+  const closing = totalBal * inp.closingPct / 100;
+  const newLoan = totalBal + closing;
+  const newPay = pmt(newLoan, newRate, 360);
+  const savings = oldPay - newPay;
+  const ltv = inp.value ? newLoan / inp.value * 100 : 0;
+  const ltvMax = maxLtv(inp.occupancy, inp.propType);
+  const cashOutDebt = debts.filter(d => d.type !== "mortgage").reduce((s, d) => s + d.bal, 0);
+
+  // breakeven on closing costs
+  let cum = 0, breakeven = null;
+  for (let m = 0; m < 120; m++) { cum += oldPayByMonth[m] - newPay; if (breakeven == null && cum >= closing) breakeven = m + 1; }
+  const diffs = oldPayByMonth.map(p => p - newPay);
+  const sumDiff10 = diffs.reduce((a, b) => a + b, 0);
+
+  const mtg = debts.find(d => d.type === "mortgage");
+  const curLeft = mtg ? monthsLeft(mtg) : null;
+  // strategies: share of positive monthly difference to savings (s) and principal (1-s)
+  function strategy(toSave) {
+    const i = newRate / 1200, y = inp.bond / 1200;
+    let b = newLoan, sv = 0, int = 0, svDeposits = 0;
+    for (let m = 0; m < 120; m++) {
+      const extra = Math.max(diffs[m], 0);
+      sv = sv * (1 + y) + extra * toSave; svDeposits += extra * toSave;
+      const it = b * i; int += it;
+      let pr = newPay - it + extra * (1 - toSave);
+      if (pr > b) pr = b;
+      b -= pr;
+      if (b <= 0.005) { b = 0; }
+    }
+    // payoff month if the month-120 extra continues
+    let pb = b, pm = 120; const lastExtra = Math.max(diffs[119], 0) * (1 - toSave);
+    while (pb > 0.005 && pm < 360) { const it = pb * i; pb -= Math.min(pb, newPay - it + lastExtra); pm++; }
+    return {
+      bal10: b, equity: newLoan - b, savingsBal: sv, growth: sv - svDeposits, int10: int,
+      netDebt: b - sv, payoffMonths: pm, intSaved: oldInt10 - int,
+      ahead: oldBal10 - (b - sv), wealth: (newLoan - b) + (oldInt10 - int) + sv, sooner: curLeft ? curLeft - pm : 0
+    };
+  }
+  // baseline = refi and spend the difference (no extra principal, no saving)
+  const spend = (() => { const i = newRate / 1200; let b = newLoan, int = 0; for (let m = 0; m < 120; m++) { const it = b * i; int += it; b -= (newPay - it); } return { bal10: b, equity: newLoan - b, savingsBal: 0, growth: 0, int10: int, netDebt: b, payoffMonths: 360, intSaved: oldInt10 - int, ahead: oldBal10 - b, wealth: (newLoan - b) + (oldInt10 - int), sooner: 0 }; })();
+  const strategies = [
+    { key: "save", name: "Save It", desc: `Put the monthly difference in a high-yield savings account earning about ${pct(inp.bond, 2)}, close to a 10-year Treasury.`, ...strategy(1) },
+    { key: "split", name: "Split It", desc: "Half to the savings account, half to extra principal on your restructured loan each month.", ...strategy(0.5) },
+    { key: "principal", name: "Pay It Down", desc: "Send the whole monthly difference to principal on your restructured loan.", ...strategy(0) }
+  ];
+  const best = strategies.reduce((a, b) => (b.wealth > a.wealth ? b : a));
+
+  const notes = [];
+  if (ltv > ltvMax) notes.push(`New loan would be ${pct(ltv, 1)} of value. Cash-out for a ${inp.occupancy.toLowerCase()} ${inp.propType.toLowerCase()} is generally capped near ${ltvMax}%. We can look at a HELOC or a partial payoff.`);
+  if (inp.credit === "Below 620") notes.push("Conventional cash-out generally needs a 620+ score. Other programs may fit; let's talk.");
+  if (stuck.length) notes.push(`${stuck.join(", ")}: the payment entered barely covers interest, so this balance may never pay off on its own.`);
+  if (savings <= 0) notes.push("At these numbers the new payment isn't lower. A different rate, term or partial payoff may still help.");
+  if (payoffs.length) {
+    const late = diffs[119];
+    notes.push(`On your current path, ${payoffs.map(p => `${p.label} pays off in month ${p.month}`).join("; ")}. After that your old payment drops${late < 0 ? `, and the new payment runs about ${usd(-late)}/mo more than what's left` : ", so the monthly difference shrinks"}. The 10-year numbers include this.`);
+  }
+  if (curLeft) notes.push(`A new 30-year loan restarts the clock (your mortgage has about ${ym(curLeft)} left). The Pay It Down strategy is how you win that time back.`);
+
+  return { inp, debts, curLeft, totalBal, oldPay, blended, monthlyInt, newRate, closing, newLoan, newPay, savings, ltv, ltvMax, cashOutDebt,
+    breakeven, sumDiff10, oldInt10, oldPaid10, oldBal10, payoffs, strategies, best, spend, notes,
+    savingsMultiple: closing ? sumDiff10 / closing : 0 };
+}
+
+function summaryText(r) {
+  const n = r.inp.name || "Client";
+  const lines = [
+    `Debt Management Calculator results for ${n}`,
+    `Home: ${usd(r.inp.value)} est. value, ${r.inp.propType}, ${r.inp.occupancy}, credit ${r.inp.credit}`,
+    `Current debts (${r.debts.length}): ${usd(r.totalBal)} at a blended ${pct(r.blended, 2)}, ${usd(r.oldPay)}/mo`
+  ];
+  r.debts.forEach(d => lines.push(`- ${d.label}: ${usd(d.bal)} @ ${pct(d.rate, 3)}, ${usd(d.pay)}/mo${d.revolving ? " (revolving)" : monthsLeft(d) ? `, ${ym(monthsLeft(d))} left` : ""}`));
+  lines.push(`Possible Debt Restructure: ${usd(r.newLoan)} at about ${pct(r.newRate, 3)} (30-yr), ${usd(r.newPay)}/mo P&I`,
+    `Monthly difference: ${usd(r.savings)} · est. costs ${usd(r.closing)} · breakeven ${r.breakeven ? r.breakeven + " months" : "not within 10 yrs"}`);
+  r.strategies.forEach(s => lines.push(`${s.name} (10 yrs): wealth unlocked ${usd(s.wealth)} (equity ${usd(s.equity)} + interest saved ${usd(s.intSaved)} + savings ${usd(s.savingsBal)}), net debt ${usd(s.netDebt)}${s.sooner > 0 ? `, paid off ${ym(s.sooner)} sooner` : ""}`));
+  lines.push(`Keeping current debts (10 yrs): ${usd(r.oldBal10)} still owed`, `Rate basis: ${CONFIG.rateSource}${CONFIG.rateDate ? " " + CONFIG.rateDate : ""} + ${CONFIG.rateAdder}%`, "", "Can we look at my real options?");
+  return lines.join("\n");
+}
+
+/* contact links: smart SMS by device */
+function isApple() { return /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent); }
+function smsHref(body) { const sep = isApple() ? "&" : "?"; return `sms:+1${CONFIG.textLine}${sep}body=${encodeURIComponent(body)}`; }
+function telHref() { return `tel:+1${CONFIG.callLine}`; }
+function mailHref(subject, body, to = CONFIG.email, cc = "") { return `mailto:${to}?${cc ? "cc=" + encodeURIComponent(cc) + "&" : ""}subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`; }
+async function copyText(t) { try { await navigator.clipboard.writeText(t); return true; } catch (e) { return false; } }
+
+const SAMPLE = {
+  name: "Jordan", value: 1250000, propType: "Single family", occupancy: "Primary", credit: "740+",
+  debts: [
+    { label: "First mortgage", type: "mortgage", bal: 520000, rate: 7.75, pay: 3870, months: 324, revolving: false },
+    { label: "Auto loan", type: "auto", bal: 38000, rate: 8.9, pay: 780, months: 56, revolving: false },
+    { label: "Visa", type: "card", bal: 22000, rate: 24.99, pay: 660, revolving: true },
+    { label: "Store card", type: "card", bal: 9500, rate: 21.9, pay: 285, revolving: true }
+  ]
+};
+
+/* ===== shared UI ===== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let debtSeq = 0;
+
+function debtRowHTML(d = {}) {
+  const k = ++debtSeq;
+  const type = d.type || "card";
+  const opts = Object.entries(DEBT_TYPES).map(([v, t]) => `<option value="${v}"${v === type ? " selected" : ""}>${t}</option>`).join("");
+  return `<div class="debt" data-k="${k}">
+  <div class="debt-top">
+    <label class="f f-label" for="dl${k}"><span>Name it</span><input id="dl${k}" data-f="label" value="${esc(d.label || "")}" placeholder="e.g. Visa"></label>
+    <label class="f" for="dt${k}"><span>Type</span><select id="dt${k}" data-f="type">${opts}</select></label>
+  </div>
+  <div class="debt-grid">
+    <label class="f" for="db${k}"><span>Balance</span><div class="in"><i>$</i><input id="db${k}" data-f="bal" inputmode="decimal" value="${d.bal ? d.bal.toLocaleString() : ""}" placeholder="0"></div></label>
+    <label class="f" for="dr${k}"><span>Rate</span><div class="in"><input id="dr${k}" data-f="rate" inputmode="decimal" value="${d.rate ?? ""}" placeholder="0.00"><i>%</i></div></label>
+    <label class="f" for="dp${k}"><span>Monthly payment</span><div class="in"><i>$</i><input id="dp${k}" data-f="pay" inputmode="decimal" value="${d.pay ? d.pay.toLocaleString() : ""}" placeholder="0"></div></label>
+    <div class="f f-left"><span>Time left on loan</span><div class="ym"><div class="in"><input id="dy${k}" data-f="yrs" inputmode="numeric" aria-label="Years left" value="${d.months ? Math.floor(d.months / 12) : ""}" placeholder="0"><i>yrs</i></div><div class="in"><input id="dm${k}" data-f="mos" inputmode="numeric" aria-label="Months left" value="${d.months ? d.months % 12 : ""}" placeholder="0"><i>mo</i></div></div></div>
+  </div>
+  <div class="debt-opts">
+    <label class="chk" for="dv${k}"><input type="checkbox" id="dv${k}" data-f="revolving"${(d.revolving ?? type === "card") ? " checked" : ""}> Revolving (no set end date)</label>
+    <label class="chk chk-start" for="ds${k}"><input type="checkbox" id="ds${k}" data-f="useStart"> Use start date instead</label>
+  </div>
+  <div class="debt-start" hidden>
+    <label class="f" for="dsd${k}"><span>Loan start</span><div class="in"><input type="month" id="dsd${k}" data-f="start" value="${d.start || ""}"></div></label>
+    <label class="f" for="dtr${k}"><span>Original term</span><div class="in"><select id="dtr${k}" data-f="term"><option value="30">30 years</option><option value="25">25 years</option><option value="20">20 years</option><option value="15">15 years</option><option value="10">10 years</option><option value="7">7 years</option><option value="5">5 years</option></select></div></label>
+  </div>
+  <div class="debt-foot"><p class="debt-note">For a mortgage, enter principal &amp; interest only (no taxes or insurance).</p><button type="button" class="rm">Remove from calculation</button></div>
+</div>`;
+}
+
+function syncRow(row) {
+  const rev = row.querySelector('[data-f="revolving"]').checked;
+  const useStart = row.querySelector('[data-f="useStart"]').checked;
+  const type = row.querySelector('[data-f="type"]').value;
+  row.querySelector(".f-left").hidden = rev || useStart;
+  row.querySelector(".chk-start").hidden = rev;
+  row.querySelector(".debt-start").hidden = rev || !useStart;
+  row.querySelector(".debt-note").hidden = type !== "mortgage";
+  row.classList.toggle("is-rev", rev);
+}
+
+function initDebts(list, debts, onChange) {
+  list.innerHTML = debts.map(debtRowHTML).join("");
+  list.querySelectorAll(".debt").forEach(syncRow);
+  list.addEventListener("input", e => { const r = e.target.closest(".debt"); if (r) syncRow(r); onChange(); });
+  list.addEventListener("change", e => {
+    const r = e.target.closest(".debt"); if (!r) return;
+    if (e.target.dataset.f === "type") r.querySelector('[data-f="revolving"]').checked = ["card", "heloc"].includes(e.target.value);
+    syncRow(r); onChange();
+  });
+  list.addEventListener("click", e => {
+    if (!e.target.classList.contains("rm")) return;
+    e.target.closest(".debt").remove(); onChange();
+  });
+}
+function addDebt(list, onChange) {
+  list.insertAdjacentHTML("beforeend", debtRowHTML({ type: "card", revolving: true }));
+  const row = list.lastElementChild; syncRow(row); row.querySelector("input").focus(); onChange();
+}
+
+function readDebts(list) {
+  return [...list.querySelectorAll(".debt")].map((row, n) => {
+    const g = f => row.querySelector(`[data-f="${f}"]`);
+    const useStart = g("useStart").checked, rev = g("revolving").checked;
+    const type = g("type").value;
+    return {
+      label: g("label").value.trim() || DEBT_TYPES[type] + " " + (n + 1), type,
+      bal: num(g("bal").value), rate: num(g("rate").value), pay: num(g("pay").value),
+      revolving: rev, months: rev || useStart ? null : (num(g("yrs").value) * 12 + num(g("mos").value)) || null,
+      start: !rev && useStart ? g("start").value : "", term: !rev && useStart ? num(g("term").value) : 0
+    };
+  });
+}
+
+function readInputs() {
+  return {
+    name: ($("name")?.value || "").trim(),
+    value: num($("value").value), propType: $("propType").value, occupancy: $("occupancy").value, credit: $("credit").value,
+    debts: readDebts($("debts")),
+    baseRate: num($("baseRate")?.value ?? CONFIG.base30), adder: CONFIG.rateAdder,
+    closingPct: num($("closingPct")?.value ?? CONFIG.closingPct), bond: num($("bond")?.value ?? CONFIG.bond10)
+  };
+}
+
+/* bars drawn to one scale per chart */
+function barChart(rows, label) {
+  const max = Math.max(...rows.map(x => x.v), 1);
+  const W = 460, L = 150, R = 84, rowH = 34, H = rows.length * rowH + 10;
+  const bars = rows.map((x, i) => {
+    const w = Math.max(2, (Math.max(x.v, 0) / max) * (W - L - R)), y = i * rowH + 6;
+    return `<text x="${L - 10}" y="${y + 17}" text-anchor="end" class="ch-l">${esc(x.k)}</text>
+<rect x="${L}" y="${y + 4}" width="${w.toFixed(1)}" height="20" rx="2" fill="${x.c}"></rect>
+<text x="${(L + w + 8).toFixed(1)}" y="${y + 18}" class="ch-v">${usd(x.v)}</text>`;
+  }).join("");
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="chart">${bars}</svg></div>`;
+}
+function tenYearCharts(r) {
+  const c = s => s.key === r.best.key ? "var(--bar-best)" : "var(--bar-alt)";
+  const debt = [
+    { k: "Keep current debts", v: r.oldBal10, c: "var(--bar-old)" },
+    { k: "Restructure & spend it", v: r.spend.netDebt, c: "var(--bar-mid)" },
+    ...r.strategies.map(s => ({ k: s.name, v: s.netDebt, c: c(s) }))
+  ];
+  const wealth = [
+    { k: "Restructure & spend it", v: Math.max(r.spend.wealth, 0), c: "var(--bar-mid)" },
+    ...r.strategies.map(s => ({ k: s.name, v: Math.max(s.wealth, 0), c: c(s) }))
+  ];
+  return `<div class="two-charts">
+  <div class="chart-col"><h4>Net debt</h4><p class="src">Loan balance minus savings. Lower is better.</p>${barChart(debt, "Net debt after 10 years")}</div>
+  <div class="chart-col"><h4>Total wealth unlocked</h4><p class="src">Equity paid down + interest saved + savings. Higher is better.</p>${barChart(wealth, "Total wealth unlocked after 10 years")}</div>
+</div>`;
+}
+
+function strategyCardsHTML(r) {
+  return r.strategies.map((s, i) => `<article class="strat${s.key === r.best.key ? " is-best" : ""}">
+  <div class="strat-head"><span class="strat-n">Option ${i + 1}</span>${s.key === r.best.key ? '<span class="pill">Most wealth unlocked</span>' : ""}</div>
+  <h3>${s.name}</h3>
+  <p class="strat-d">${s.desc}</p>
+  <div class="wealth"><small>Total wealth unlocked in 10 yrs</small><b>${usd(s.wealth)}</b></div>
+  <dl class="kv">
+    <div><dt>Equity paid down</dt><dd>${usd(s.equity)}</dd></div>
+    <div><dt>${s.intSaved >= 0 ? "Interest saved" : "Interest added"} vs. today</dt><dd>${usd(Math.abs(s.intSaved))}</dd></div>
+    <div><dt>Savings accumulated (compounded)</dt><dd>${usd(s.savingsBal)}</dd></div>
+    <div class="kv-line"><dt>Net debt after 10 yrs</dt><dd>${usd(s.netDebt)}</dd></div>
+    <div><dt>${s.ahead >= 0 ? "Ahead of" : "Behind"} keeping current debts</dt><dd class="${s.ahead >= 0 ? "up" : "down"}">${usd(Math.abs(s.ahead))}</dd></div>
+    <div><dt>Loan paid off in</dt><dd>${ym(s.payoffMonths)}</dd></div>
+  </dl>
+  ${s.key !== "save" && s.sooner > 0 ? `<p class="sooner">Mortgage-free ${ym(s.sooner)} sooner than your current loan</p>` : ""}
+</article>`).join("");
+}
+
+function costCheckHTML(r) {
+  return `<dl class="kv kv-wide">
+  <div><dt>Est. restructure costs (rolled in)</dt><dd>${usd(r.closing)}</dd></div>
+  <div><dt>Payment difference over 10 yrs</dt><dd>${usd(r.sumDiff10)}</dd></div>
+  <div><dt>Costs earned back in</dt><dd>${r.breakeven ? r.breakeven + " months" : "Not within 10 yrs"}</dd></div>
+  <div><dt>Still owed in 10 yrs if you change nothing</dt><dd>${usd(r.oldBal10)}</dd></div>
+</dl>`;
+}
+
+function notesHTML(r) { return r.notes.length ? `<ul class="notes">${r.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""; }
+
+function shot(pose, cls = "", file = "") {
+  const img = file ? `<img src="${file}" alt="${CONFIG.name}" onerror="this.parentNode.classList.remove('has-img');this.remove()">` : "";
+  return `<figure class="shot ${cls}${file ? " has-img" : ""}" aria-label="${CONFIG.name}">${img}<div><b>Austin photo</b><span>${esc(pose)}</span><span>${esc(file)}</span></div></figure>`;
+}
+
+/* Contact: real links plus visible numbers, since links can't be guaranteed in every app */
+function contactHTML(r, heading = "Curious If This Is the Right Move?") {
+  const who = r.inp.name ? `${r.inp.name}, ` : "";
+  const body = summaryText(r);
+  const subj = `Debt Management Calculator: ${r.inp.name || "consultation request"}`;
+  return `<div class="cta">
+  <h2>${heading}</h2>
+  <p>${esc(who)}contact me so we can tailor an option for you.</p>
+  <div class="cta-btns">
+    <a class="btn btn-text" href="${smsHref(body)}">Text</a>
+    <a class="btn btn-email" href="${mailHref(subj, body)}">Email</a>
+    <a class="btn btn-call" href="${telHref()}">Call</a>
+  </div>
+  <div class="cta-lines">
+    <div><span>Text</span><b>${fmtPhone(CONFIG.textLine)}</b></div>
+    <div><span>Call</span><b>${fmtPhone(CONFIG.callLine)}</b></div>
+    <div><span>Email</span><b>${CONFIG.email}</b></div>
+  </div>
+  <form class="report" id="reportForm" novalidate>
+    <label class="f" for="clientEmail"><span>Email me a copy of my results</span>
+      <div class="report-row"><div class="in"><input id="clientEmail" type="email" placeholder="you@email.com" autocomplete="email"></div><button class="btn btn-ghost" type="submit">Send my copy</button></div>
+    </label>
+    <p class="report-msg" id="reportMsg" aria-live="polite">Opens your email with your results addressed to you, with a copy to our office.</p>
+    <button type="button" class="linkbtn" id="copySum">Copy my results</button>
+  </form>
+</div>`;
+}
+function wireContact(getResult) {
+  document.addEventListener("submit", e => {
+    if (e.target.id !== "reportForm") return;
+    e.preventDefault();
+    const em = $("clientEmail").value.trim(), msg = $("reportMsg");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { msg.textContent = "Enter an email like name@example.com, then tap Send my copy."; return; }
+    const r = getResult();
+    location.href = mailHref(`Your Debt Management Calculator results`, summaryText(r), em, CONFIG.email);
+    msg.textContent = "Your email app should open with the report. Tap Send there to finish.";
+  });
+  document.addEventListener("click", async e => {
+    if (e.target.id !== "copySum") return;
+    const ok = await copyText(summaryText(getResult()));
+    e.target.textContent = ok ? "Copied" : "Copy blocked here; select the numbers above";
+    setTimeout(() => (e.target.textContent = "Copy my results"), 2200);
+  });
+}
+
+function footerHTML() {
+  return `<footer class="foot"><div class="wrap">
+  <p><b>For informational purposes only.</b> This calculator is an illustration, not a loan offer, rate quote, commitment to lend or rate lock. Results are estimates based on the figures entered. The rate shown is the ${CONFIG.rateSource} (week of ${CONFIG.rateDate}) plus ${CONFIG.rateAdder}% and is not an offer. Restructure rates vary according to your specific terms. Payments shown are principal and interest only and exclude taxes, insurance, mortgage insurance and HOA dues. Restructure costs are estimates. "Total wealth unlocked" adds estimated equity paid down, interest saved and savings accumulated, and is not a guarantee of future value. Specific terms, options and credit availability depend on credit, income, property, loan program, underwriting approval and market conditions. Not all applicants will qualify. Savings-account and Treasury yields vary and are not guaranteed. Restructuring debt into a mortgage may increase total finance charges over the life of the loan. Consult a tax or financial advisor about your situation.</p>
+  <p>${CONFIG.name}, ${CONFIG.title}, NMLS #${CONFIG.nmls} · ${CONFIG.team} · ${CONFIG.division} · ${CONFIG.address}</p>
+  <p>© 2026 ${CONFIG.company} · NMLS #${CONFIG.companyNmls} · Equal Housing Opportunity · <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener">nmlsconsumeraccess.org</a></p>
+</div></footer>`;
+}
+
+const PROP_OPTS = ["Single family", "Condo", "Townhome", "2-4 unit"];
+const OCC_OPTS = ["Primary", "Second home", "Investment"];
+const CREDIT_OPTS = ["760+", "740+", "720-739", "700-719", "680-699", "660-679", "620-659", "Below 620"];
+const optList = (arr, sel) => arr.map(o => `<option${o === sel ? " selected" : ""}>${o}</option>`).join("");
+
+let R, step = 0, unlocked = false;
+const LABELS = ["You", "Home", "Debts", "Numbers", "Strategy"];
+function prog(){ $("prog").innerHTML = LABELS.map((l,i)=>`<button class="pstep ${i<step?"done":""} ${i===step?"on":""}" data-go="${i}" ${i>3&&!unlocked?"disabled":""}><span>${l}</span></button>`).join(""); }
+function go(i){ if(i===4&&!unlocked) i=3; step=i; document.querySelectorAll(".screen").forEach(s=>s.hidden=+s.dataset.s!==i); prog(); render(); window.scrollTo({top:0,behavior:"smooth"}); }
+function chips(id, opts){
+  const box=document.querySelector(`[data-for="${id}"]`);
+  box.innerHTML=opts.map(o=>`<button type="button" class="chip" aria-pressed="${o===$(id).value}">${o}</button>`).join("");
+  box.onclick=e=>{const b=e.target.closest(".chip"); if(!b) return; $(id).value=b.textContent; chips(id,opts); render();};
+}
+function render(){
+  R = compute(readInputs());
+  const n=R.inp.name;
+  document.querySelector(".hi-name").textContent = n?`Nice to connect with you, ${n}. Tell me about your home.`:"Tell me about your home.";
+  $("resTitle").textContent = n?`${n}, here's what I found.`:"Here's what I found.";
+  $("resSub").textContent = `You're paying ${usd(R.oldPay)} a month across ${R.debts.length} payments, at a blended ${pct(R.blended,2)}.`;
+  $("nowPair").innerHTML=`<div class="mini"><small>Blended rate today</small><b>${pct(R.blended,2)}</b></div><div class="mini"><small>Interest per month</small><b>${usd(R.monthlyInt)}</b></div>`;
+  $("heroNum").innerHTML=`<small>${R.savings>=0?"Could free up each month":"New payment would be higher by"}</small><b>${usd(Math.abs(R.savings))}</b><span>${usd(R.oldPay)} today → ${usd(R.newPay)} with a Debt Restructure</span>`;
+  $("newPair").innerHTML=`<div class="mini"><small>Possible restructure rate</small><b>${pct(R.newRate,3)}</b></div><div class="mini"><small>Restructured loan · ${pct(R.ltv,0)} of value</small><b>${usd(R.newLoan)}</b></div>`;
+  $("src").innerHTML = `Rate: ${CONFIG.rateSource} (week of ${CONFIG.rateDate}) ${pct(CONFIG.base30,2)} + ${CONFIG.rateAdder}% = ${pct(R.newRate,3)}. Restructure rates vary according to your specific terms. Est. costs of ${usd(R.closing)} included.`;
+  $("notes").innerHTML = notesHTML(R);
+  $("gateCopy").textContent = `${n?n+", w":"W"}here should I send your results? Then see three ways to turn ${usd(Math.max(R.savings,0))} a month into savings, equity or both.`;
+  $("stTitle").textContent = n?`${n}, let's put that difference to work.`:"Let's put that difference to work.";
+  $("strats").innerHTML=strategyCardsHTML(R);
+  $("chart").innerHTML=tenYearCharts(R);
+  $("cost").innerHTML=costCheckHTML(R);
+  $("cta").innerHTML=contactHTML(R);
+}
+$("propType").value=SAMPLE.propType; $("occupancy").value=SAMPLE.occupancy;
+chips("propType",PROP_OPTS); chips("occupancy",OCC_OPTS);
+$("credit").innerHTML=optList(CREDIT_OPTS,SAMPLE.credit);
+$("name").value=SAMPLE.name; $("value").value=SAMPLE.value.toLocaleString();
+$("baseRate").value=CONFIG.base30; $("closingPct").value=CONFIG.closingPct; $("bond").value=CONFIG.bond10;
+const poses=["Waving hello","Pointing at the form","Pointing down at list","Pointing at the big number","Thumbs up"];
+const poseFiles=CONFIG.photos.poses;
+document.querySelectorAll(".screen").forEach(s=>s.querySelector(".ps").innerHTML=shot(poses[+s.dataset.s],"",poseFiles[+s.dataset.s]));
+$("ctaShot").innerHTML=shot("Headshot, inviting","",CONFIG.photos.headshot);
+$("foot").innerHTML=footerHTML();
+initDebts($("debts"),SAMPLE.debts,render);
+$("addDebt").onclick=()=>addDebt($("debts"),render);
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]"); if(g&&!g.disabled) go(+g.dataset.go);});
+document.addEventListener("input",e=>{ if(!e.target.closest("#debts")&&!["clientEmail","leadPhone","leadEmail"].includes(e.target.id)) render(); });
+$("unlock").onclick=()=>{
+  const ph=$("leadPhone").value.replace(/\D/g,""), em=$("leadEmail").value.trim();
+  if(ph.length<10 && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ $("gateMsg").textContent="Add a 10-digit mobile number or an email, then tap Unlock."; return; }
+  sendLead($("leadPhone").value.trim(), em);
+  unlocked=true; go(4);
+  if(em && $("clientEmail")) $("clientEmail").value=em;
+};
+wireContact(()=>R);
+
+/* ===== Lead capture: sends every unlock to your Netlify Forms inbox ===== */
+function sendLead(phone, email){
+  const r = R, home = `${usd(r.inp.value)} · ${r.inp.propType} · ${r.inp.occupancy} · credit ${r.inp.credit}`;
+  const data = { "form-name": "debt-calculator-lead", name: r.inp.name || "(no name)", phone, email, home,
+    savings: `${usd(r.savings)}/mo`, summary: summaryText(r) };
+  fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(data).toString() }).catch(() => {});
+}
+/* ===== Live rates: Freddie Mac PMMS 30-yr + 10-yr Treasury, via the rates function ===== */
+fetch("/.netlify/functions/rates").then(r => r.ok ? r.json() : Promise.reject()).then(j => {
+  if (!(j.mortgage30 > 0)) throw 0;
+  CONFIG.base30 = j.mortgage30; CONFIG.rateDate = j.mortgageDate; CONFIG.rateSource = "Freddie Mac PMMS 30-yr fixed average";
+  if (j.treasury10 > 0) CONFIG.bond10 = j.treasury10;
+  $("baseRate").value = CONFIG.base30; $("bond").value = CONFIG.bond10; render();
+}).catch(() => { CONFIG.rateSource = "SAMPLE rate, live rate unavailable. Freddie Mac PMMS 30-yr fixed average"; render(); });
+go(0);
+</script>
+
+</body>
+</html>
